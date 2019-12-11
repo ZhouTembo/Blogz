@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .error {
+        color: purple;
+    }
+</style>
+    <h1>Write a Blog!</h1>
+    <form  method='post'  >
+        <label>
+            New Blog Title:
+        
+            <input type="text" name='blog'  value=''/>
+            <span class="error" value=''> {{titleerror}} </span>
+        </label><br>
+        <textarea rows="6" cols="50" name='blogtext' value=''></textarea>
+        <span class="error" value=''> {{contenterror}} </span> <br>
+        
+        <input type="submit" value='Add Blog' />
+    </form>
+
+    <hr />
+<h2>Posted Blogs</h2>
+    {% if blogs|length == 0 %}
+    <p>No blogs yet</p>
+    {% else %}
+
+        <ul>
+            {% for blog in blogs %}
+            <li> <a href="/{{blog.id}}">{{blog.name}}</a>
+               
+            </nav><br>{{blog.content}}
+                <form method="POST" action="/{{blog.id}}" style="display:inline-block;">
+                    <input type="hidden" name="task-id" value="{{blog.name,blog.content}}" />
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+
+    {% endif %}
+
+    
+
+{% endblock %}

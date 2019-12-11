@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+<h2>Welcome To Blog Central!</h2>
+<h4>Posted Blogs:</h4>
+    {% if blogs|length == 0 %}
+    <p>No blogs yet</p>
+    {% else %}
+
+        <ul>
+            {% for blog in blogs %}
+            <li><nav>
+                <a href="/{{blog.id}}">{{blog.name}}</a>
+               
+              </nav><br>{{blog.content}}
+                <form method="POST" action="/" style="display:inline-block;">
+                    <input type="hidden" name="task-id" value="{{blog.name}}" />
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+
+    {% endif %}
+
+    
+
+{% endblock %}
