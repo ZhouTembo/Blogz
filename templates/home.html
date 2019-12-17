@@ -8,21 +8,16 @@
     <p>No blogs yet</p>
     {% else %}
 
-        <ul>
-            {% for blog in blogs %}
-            <li><nav>
-                <a href="/{{blog.id}}">{{blog.name}}</a>
-               
-              </nav><br>{{blog.content}}
-                <form method="POST" action="/" style="display:inline-block;">
-                    <input type="hidden" name="task-id" value="{{blog.name}}" />
-                </form>
-            </li>
-            {% endfor %}
-        </ul>
+    <ul>
+        {% for blog in blogs %}
+        <li><a href="/?id={{blog.id}}">{{blog.name}}</a><br>{{blog.content}}
+                        
+        </li>
+        {% endfor %}
+    </ul>
 
-    {% endif %}
+{% endif %}
 
-    
+
 
 {% endblock %}

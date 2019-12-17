@@ -22,11 +22,21 @@ class Blog(db.Model):
         
 @app.route('/', methods=['POST', 'GET'])
 def index():
-
     
-    blogs=Blog.query.all()
+    # bob=request.args.get('Blog_id')
+    # if bob>'':
+    #     return ('blogpage.html', kook==bob)
+    # else:
+    if request.method == 'GET':
+        
+        id=request.args.get('id')
+        post=Blog.query.get (id)
+        return render_template('blogpage.html',kook=post.name, look=post.content)
+    elif request.method == 'POST':
+        blogs=Blog.query.all()
     
-    return render_template('home.html',title='Blogs',blogs=blogs)
+        return render_template('home.html',title='Blogs',blogs=blogs)
+    
 
 
 @app.route('/newpost', methods=['POST', 'GET'])
