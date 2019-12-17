@@ -20,23 +20,14 @@ class Blog(db.Model):
         self.content=content
 
         
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/', methods=[ 'GET','POST'])
 def index():
-    
-    # bob=request.args.get('Blog_id')
-    # if bob>'':
-    #     return ('blogpage.html', kook==bob)
-    # else:
-    if request.method == 'GET':
-        
+    if request.method=='POST'and'GET':
         id=request.args.get('id')
-        post=Blog.query.get (id)
-        return render_template('blogpage.html',kook=post.name, look=post.content)
-    elif request.method == 'POST':
-        blogs=Blog.query.all()
-    
-        return render_template('home.html',title='Blogs',blogs=blogs)
-    
+        post=Blog.query.get(id)
+        return render_template('blogpage.html',kook=post.content,look=post.name)
+    elif request.method=='GET':
+        return render_template('home.html')
 
 
 @app.route('/newpost', methods=['POST', 'GET'])
@@ -55,17 +46,23 @@ def addindex():
             titleerror='Not a valid title'
         elif content=='':
             contenterror='Not valid entry'
+
+        if not titleerror and not contenterror:
+            return redirect('/newpost')
     return render_template('addblogs.html',title="Write a Blog!",blogs=blogs, titleerror=titleerror,contenterror=contenterror)
     
     
 
 
-@app.route('/blog', methods=['POST', 'GET'])
+@app.route('/blog')
 def viewindex():
+    id=request.args.get('id')
 
-    
+    if id:
+        blog=Blog.query.get(id)
+        return render_template('blogpage.html', blog=blog)
+
     blogs=Blog.query.all()
-    
     return render_template('blogs.html',title='Blogs',blogs=blogs)
 
 
