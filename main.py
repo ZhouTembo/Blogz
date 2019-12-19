@@ -30,27 +30,36 @@ class blog(db.Model):
     content = db.Column(db.String(700))
     
 
-    def __init__(self, name, content):
+    def __init__(self, name, content,owner_id):
         self.name = name
         self.content=content
+        self.owner_id=owner_id
 
         
 @app.route('/blog', methods=[ 'GET','POST'])
 def blogs():
     
-    num=request.args.get('id')
-    if num:
-        post=blog.query.get(num)
-        owner=User.query.filter_by(username=session['username']).first()
     
-        return render_template('blogpage.html',kook=post.content,look=post.name, maam=owner.username)
     
+   
     user=request.args.get('userid')
     if user:
-        auth=User.query.get(user)
-        return render_template('singleUser.html',maam=auth.username)
+        owner_id=user
+        auth2=User.query.filter_by(username=owner_id).first()
+        
+        blogs=blog.query.filter_by(owner_id=auth2.id).all()
+        return render_template('singleUser.html',blogs=blogs, maam=auth2.username)
+    num=request.args.get('id')
+   
+    if num:
+        post=blog.query.get(num)
+        owner_id=post.owner_id
+        auth2=User.query.filter_by(id=owner_id).first()
+        
+        return render_template('blogpage.html',kook=post.content,look=post.name, maam=auth2.username )
     else:
         return render_template('home.html')
+    
 
 
 @app.route('/newpost', methods=['POST', 'GET'])
@@ -61,11 +70,11 @@ def addindex():
     owner=User.query.filter_by(username=session['username']).first()
     
     if request.method == 'POST':
-        
+        owner_id=owner.id
         name = request.form['blog']
         content=request.form['blogtext']
         
-        new_blog = blog(name, content)
+        new_blog = blog(name, content,owner_id)
         db.session.add(new_blog)
         db.session.commit()
         
@@ -103,7 +112,7 @@ def login():
 
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            session['username'] = owner
+            session['username'] = username
             
             flash("Logged in")
             return redirect('/newpost')
