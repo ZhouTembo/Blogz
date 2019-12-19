@@ -41,7 +41,14 @@ def blogs():
     num=request.args.get('id')
     if num:
         post=blog.query.get(num)
-        return render_template('blogpage.html',kook=post.content,look=post.name)
+        owner=User.query.filter_by(username=session['username']).first()
+    
+        return render_template('blogpage.html',kook=post.content,look=post.name, maam=owner.username)
+    
+    user=request.args.get('userid')
+    if user:
+        auth=User.query.get(user)
+        return render_template('singleUser.html',maam=auth.username)
     else:
         return render_template('home.html')
 
@@ -51,9 +58,13 @@ def addindex():
     titleerror=''
     contenterror=''
     blogs=blog.query.all()
+    owner=User.query.filter_by(username=session['username']).first()
+    
     if request.method == 'POST':
+        
         name = request.form['blog']
         content=request.form['blogtext']
+        
         new_blog = blog(name, content)
         db.session.add(new_blog)
         db.session.commit()
@@ -73,37 +84,31 @@ def addindex():
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'register','homeindex']
+    allowed_routes = ['login', 'register','index']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-
+    usererror=''
+    passworderror=''
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        usererror=''
-        passworderror=''
-        if username=='' or len(username)<3:
-            usererror='Not a valid username'
-        elif password=='' or len(password<3):
-            passworderror='Not valid password'
-         
-        elif usererror>'' or passworderror>'':
-            return render_template('signup.html', usererror=usererror,passworderror=passworderror)
-  
+        
+        if username=='' or password=='':
+            usererror='Username or password not valid'
+            return render_template('login.html', usererror=usererror,passworderror=passworderror)
+
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            session['username'] = username
+            session['username'] = owner
             
             flash("Logged in")
             return redirect('/newpost')
-        else:
-            flash('User password incorrect, or user does not exist', 'error')
-
-    return render_template('login.html')
+    else:
+        return render_template('login.html', usererror=usererror,passworderror=passworderror)
 
 
 @app.route('/signup', methods=['POST', 'GET'])
@@ -150,8 +155,8 @@ def logout():
 
 
 
-@app.route('/index')
-def homeindex():
+@app.route('/')
+def index():
     users=User.query.all()
     return render_template('index.html', users=users)
 
