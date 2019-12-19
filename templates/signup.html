@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+
+<body>
+    <style>
+        .error {
+            color: purple;
+        }
+    </style>
+    <h1>Signup</h1>
+    <form action="/signup" method="post">
+        <label for="new_username">Username</label>
+        <input id="new_username" type="text" name="new_username" value='{{home}}' />
+        <span class="error"> {{usererror}} </span>
+        <br><label for="new_password">Password</label>
+        <input id="new_password" type="password" name="new_password" />
+        <span class="error"> {{passworderror}} </span>
+        <br><label for="new_vpassword">Verify Password</label>
+        <input id="new_vpassword" type="password" name="new_vpassword" />
+        <span class="error"> {{password_error}} </span>
+        
+        <br><input type="submit" />
+    </form>
+</body>
+
+</html>
