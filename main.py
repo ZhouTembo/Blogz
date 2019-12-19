@@ -23,8 +23,9 @@ class User(db.Model):
 
 
 class blog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
 
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     name = db.Column(db.String(120))
     content = db.Column(db.String(700))
     
@@ -34,13 +35,14 @@ class blog(db.Model):
         self.content=content
 
         
-@app.route('/', methods=[ 'GET','POST'])
+@app.route('/blog', methods=[ 'GET','POST'])
 def blogs():
-    if request.method=='POST'and'GET':
-        id=request.args.get('id')
-        post=blog.query.get(id)
+    
+    num=request.args.get('id')
+    if num:
+        post=blog.query.get(num)
         return render_template('blogpage.html',kook=post.content,look=post.name)
-    elif request.method=='GET':
+    else:
         return render_template('home.html')
 
 
@@ -69,11 +71,11 @@ def addindex():
 
 
 
-# @app.before_request
-# def require_login():
-#     allowed_routes = ['login', 'index', 'sigregisternup','homeindex']
-#     if request.endpoint not in allowed_routes and 'username' not in session:
-#         return redirect('/login')
+@app.before_request
+def require_login():
+    allowed_routes = ['login', 'register','homeindex']
+    if request.endpoint not in allowed_routes and 'username' not in session:
+        return redirect('/login')
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -144,20 +146,14 @@ def register():
 @app.route('/logout')
 def logout():
     del session['username']
-    return redirect('/blog')
+    return redirect('/login')
 
 
 
-# @app.route('/')
-# def homeindex():
-#     id=request.args.get('id')
-
-#     if id:
-#         blog=blog.query.get(id)
-#         return render_template('blogpage.html', blog=blog)
-
-#     blogs=blog.query.all()
-#     return render_template('blogs.html',title='Blogs',blogs=blogs)
+@app.route('/index')
+def homeindex():
+    users=User.query.all()
+    return render_template('index.html', users=users)
 
 
 

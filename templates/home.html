@@ -11,7 +11,7 @@
     <ul>
         {% for blog in blogs %}
         <li><a href="/blog?id={{blog.id}}">{{blog.name}}</a><br>{{blog.content}}
-                        <FORM action='Post'></FORM>/>
+                        <FORM action='/blog?id={{blog.id}}'></FORM>/>
         </li>
         {% endfor %}
     </ul>
