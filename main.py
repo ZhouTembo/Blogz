@@ -62,9 +62,9 @@ def blogs():
         
         
         blogs=blog.query.all()
-        name=User.query.filter_by(id=blog.owner_id).first()
+        # name=User.query.filter_by(id=blog.owner_id).first()
         
-        return render_template('home.html', blogs=blogs, maam=name.username)
+        return render_template('home.html', blogs=blogs)
     
 
 
