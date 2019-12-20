@@ -10,8 +10,9 @@
 
     <ul>
         {% for blog in blogs %}
-        <li><a href="/blog?id={{blog.id}}">{{blog.name}}</a><br>{{blog.content}}
-                        <FORM action='/blog?id={{blog.id}}'></FORM>/>
+        <li><a href="/blog?id={{blog.id}}">{{blog.name}}</a><br>{{blog.content}}<br><h5>Written by:<a href="/blog?userid={{maam}}">{{maam}}</a>
+
+                        
         </li>
         {% endfor %}
     </ul>

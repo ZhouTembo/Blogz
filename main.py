@@ -53,12 +53,18 @@ def blogs():
    
     if num:
         post=blog.query.get(num)
-        owner_id=post.owner_id
+        owner_id=post.id
         auth2=User.query.filter_by(id=owner_id).first()
         
         return render_template('blogpage.html',kook=post.content,look=post.name, maam=auth2.username )
     else:
-        return render_template('home.html')
+        
+        
+        
+        blogs=blog.query.all()
+        name=User.query.filter_by(id=blog.owner_id).first()
+        
+        return render_template('home.html', blogs=blogs, maam=name.username)
     
 
 
@@ -131,9 +137,9 @@ def register():
         username = request.form['new_username']
         password = request.form['new_password']
         vpassword=request.form['new_vpassword']
-        if username=='' or len(username)<3:
+        if username=='' or len(username)<3 or " " in username:
             usererror='Not a valid username'
-        if password=='' or len(password)<3:
+        if password=='' or len(password)<3 or " " in password:
             passworderror='Not valid password'
         if password!=vpassword:
             password_error='Passwords do not match'
